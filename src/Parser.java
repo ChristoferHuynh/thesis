@@ -1,6 +1,6 @@
 
 public class Parser {
 public static void main(String[] args) {
-	System.out.println("wewoww");
+	System.out.println("linux commit push");
 }
 }
