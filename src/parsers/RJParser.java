@@ -18,7 +18,7 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			String nextKey = scanner.next(); // key = value i loggsen.. behöver nog göras på annorlunda sätt men du fattar
+			String nextKey = scanner.next(); // key = value i loggsen.. behï¿½ver nog gï¿½ras pï¿½ annorlunda sï¿½tt men du fattar
 			String nextValue = scanner.next();
 			System.out.println(nextKey);
 			System.out.println(nextValue);
@@ -32,27 +32,6 @@ public class RJParser extends Parser {
 	public boolean compare() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	public HashMap<String, String[]> read_processes_info(File customerFile) {
-		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
-		try {
-			scanner = new Scanner(customerFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		while (scanner.hasNext()) {
-			String[] nextValue = new String[11];
-			for (int i = 0; i < nextValue.length - 1; i++) {
-				nextValue[i] = scanner.next();
-			}
-			nextValue[10] = scanner.nextLine();
-			values.put(nextValue[1], nextValue);
-		}
-		
-		return values;
 	}
 	
 	public HashMap<String, String[]> read_cron_at_info(File customerFile) { //Unsure how to parse, how does it look when directory exists?
@@ -77,7 +56,16 @@ public class RJParser extends Parser {
 		return values;
 	}
 
-	
+	public String evaluate_cron_at_info(HashMap<String, String[]> customerInfo) {
+		System.out.println(customerInfo.get("2")[0]);
+		if (customerInfo.get("1")[0].equals("ls: cannot access '/etc/cron.allow': No such file or directory")) { 
+			//Anyone not in cron.deny can submit crontab files.
+			return "Cannot access file";
+			
+		}
+		return "HAX";
+	}
+
 	public HashMap<String, String[]> read_crontab_info(File customerFile) { //Unsure how to parse, how does it look when they exist?
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
@@ -105,8 +93,10 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
-	public HashMap<String, String[]> read_disvolume_info(File customerFile) {
+	public HashMap<String, String[]> read_diskvolume_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		int ID = 1;
 		
 		try {
 			scanner = new Scanner(customerFile);
@@ -116,6 +106,67 @@ public class RJParser extends Parser {
 		}
 		while (scanner.hasNext()) {
 			String[] nextValue = new String[6];
+			System.out.println("\nb44");
+			for (int i = 0; i < nextValue.length - 1; i++) {
+				nextValue[i] = scanner.next();
+				System.out.print(nextValue[i] + "\t");
+			}
+			nextValue[nextValue.length - 1] = scanner.nextLine();
+			values.put(Integer.toString(ID), nextValue);
+			ID++;
+		}
+		
+		return values;
+	}
+
+	public String evaluate_diskvolume_info(HashMap<String, String[]> customerInfo) {
+		
+		
+		
+		return "";
+	}
+	
+	public HashMap<String, HashMap<String, String>> read_encrypted_disk_info(File customerFile) {
+		HashMap<String, HashMap<String, String>> values = new HashMap<String, HashMap<String, String>>(); 
+		String SingleLine;
+		String[] SingleLineVector;
+		String[] LineVectorVector; //lol..
+		
+		HashMap<String, String> innerValues = new HashMap<String, String>();
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			SingleLine = scanner.nextLine();
+			SingleLineVector = SingleLine.split(" ");
+			for (int i = 0; i < SingleLineVector.length; i++) {
+				System.out.print(SingleLineVector[i] + "\t");
+			}
+			for (int i = 1; i < SingleLineVector.length; i++) { //0 Ã¤r dir
+				LineVectorVector = SingleLineVector[i].split("=");
+				innerValues.put(LineVectorVector[0], LineVectorVector[1]);
+			}
+			values.put(SingleLineVector[0], new HashMap<String, String>(innerValues));
+			innerValues.clear();
+		}
+		return values;
+	}
+	
+	public HashMap<String, String[]> read_processes_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String[] nextValue = new String[11];
 			for (int i = 0; i < nextValue.length - 1; i++) {
 				nextValue[i] = scanner.next();
 			}
@@ -126,11 +177,10 @@ public class RJParser extends Parser {
 		return values;
 	}
 
-	
-	public HashMap<String, String[]> read_encrypted_disk_info(File customerFile) {
-		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		String PID;
-		String PTUUID;
+	public HashMap<String, String> read_environment_info(File customerFile) {
+		
+		HashMap<String, String> values = new HashMap<String, String>(); 
+		
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -138,12 +188,12 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			PID = scanner.next();
-			PTUUID = scanner.findInLine("PTUasdasd");
-			System.out.println(PID + "\t" + PTUUID);
+			String[] innerValues = scanner.nextLine().split("=");
+			values.put(innerValues[0], innerValues[1]);
 		}
 		
 		return values;
+		
 	}
 	
 }
