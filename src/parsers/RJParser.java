@@ -38,6 +38,9 @@ public class RJParser extends Parser {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		int id = 1;
 		String PID = Integer.toString(id);
+		String[] files = {"null", "/etc/cron.allow", "/etc/at.allow"};
+		int fileIndex = 0;
+		String currFile = files[fileIndex];
 		
 		try {
 			scanner = new Scanner(customerFile);
@@ -46,10 +49,14 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			String[] nextValue = new String[1];
-			nextValue[0] = scanner.nextLine();
-			PID = Integer.toString(id);			
-			values.put(PID, nextValue);
+			String nextLine = scanner.nextLine();
+			if (nextLine.contains("No such file or directory"))) {
+				currFile = files[++fileIndex];
+				values.put(currFile, "No such file or directory");
+			}
+			if (nextLine.contains("total")) currFile = files[++fileIndex];
+			String[9] nextValue = nextLine.split(" ");
+			values.put(currFile.concat(nextValue[9]), nextValue);
 			id++;
 		}
 		
