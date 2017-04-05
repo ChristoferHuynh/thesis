@@ -3,6 +3,7 @@ package parsers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class RJParser extends Parser {
@@ -36,8 +37,7 @@ public class RJParser extends Parser {
 	
 	public HashMap<String, String[]> read_cron_at_info(File customerFile) { //Unsure how to parse, how does it look when directory exists?
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		int id = 1;
-		String PID = Integer.toString(id);
+
 		String[] files = {"null", "/etc/cron.allow", "/etc/at.allow"};
 		int fileIndex = 0;
 		String currFile = files[fileIndex];
@@ -50,27 +50,47 @@ public class RJParser extends Parser {
 		}
 		while (scanner.hasNext()) {
 			String nextLine = scanner.nextLine();
-			if (nextLine.contains("No such file or directory"))) {
+			if (nextLine.contains("No such file or directory")) {
+				System.out.println(fileIndex);
 				currFile = files[++fileIndex];
-				values.put(currFile, "No such file or directory");
+				System.out.println(currFile);
+				values.put(currFile, new String[]{"No such file or directory"});
 			}
-			if (nextLine.contains("total")) currFile = files[++fileIndex];
-			String[9] nextValue = nextLine.split(" ");
-			values.put(currFile.concat(nextValue[9]), nextValue);
-			id++;
+			else if (nextLine.contains("total")) currFile = files[++fileIndex];
+			else { 
+			//	String[] nextValue = nextLine.split("separator"); //Doesn't work with " " :(
+				String[] nextValue = new String[9];
+				for (int i = 0; i < nextValue.length; i++) {
+					nextValue[i] = scanner.next();
+					System.out.print("%" + nextValue[i] + "%" + "\t");
+				}
+				System.out.println();
+				values.put(currFile.concat("/" + nextValue[8]), nextValue);
+			}
 		}
 		
 		return values;
 	}
 
 	public String evaluate_cron_at_info(HashMap<String, String[]> customerInfo) {
-		System.out.println(customerInfo.get("2")[0]);
-		if (customerInfo.get("1")[0].equals("ls: cannot access '/etc/cron.allow': No such file or directory")) { 
-			//Anyone not in cron.deny can submit crontab files.
-			return "Cannot access file";
-			
+		Iterator itr = customerInfo.keySet().iterator();
+		String returnString = "";
+		
+		while (itr.hasNext()){
+			String key = (String) itr.next();
+			String[] value = customerInfo.get(key);
+			if (value[0].contains("No such file or directory")) {
+				returnString = returnString.concat("No " + key  + " has been set up.\n");
+			}
+			else { 
+				String[] permissions = value[0].split("");
+				if (permissions[8].equals("w")) {
+					returnString = returnString.concat("\n Warning! Any user can alter the cron for " + key
+							+ "\n It would be a good idea to change permissions so that only the owner and group can write to this file");
+				}
+			}
 		}
-		return "HAX";
+		return returnString;
 	}
 
 	public HashMap<String, String[]> read_crontab_info(File customerFile) { //Unsure how to parse, how does it look when they exist?
