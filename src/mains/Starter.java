@@ -13,7 +13,7 @@ public class Starter {
 
 	public static void main(String[] args) {
 		
-		HashMap<String, String> processes = new HashMap<String, String>();
+		HashMap<String, String[]> processes = new HashMap<String, String[]>();
 
 		// Should be decided when running the file.
 		File resultDir;
@@ -24,7 +24,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "cron_at_info";		
+		test_name = "environment_info";		
 		
 		//For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";
@@ -44,7 +44,7 @@ public class Starter {
 
 		try {
 			Method method = rjParser.getClass().getMethod("read_" + test_name, File.class);
-			processes = (HashMap<String, String>) method.invoke(rjParser, processesFile);
+			processes = (HashMap<String, String[]>) method.invoke(rjParser, processesFile);
 			Method method2 = rjParser.getClass().getMethod("evaluate_" + test_name, method.getReturnType());
 			System.out.println("\n");
 			System.out.println(method2.invoke(rjParser, processes));

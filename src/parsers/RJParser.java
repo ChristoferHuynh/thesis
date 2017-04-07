@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 
 public class RJParser extends Parser {
 
@@ -35,10 +36,10 @@ public class RJParser extends Parser {
 		return false;
 	}
 	
-	public HashMap<String, String[]> read_cron_at_info(File customerFile) { //Unsure how to parse, how does it look when directory exists?
+	public HashMap<String, String[]> read_cron_at_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 
-		String[] files = {"null", "/etc/cron.allow", "/etc/at.allow"};
+		String[] files = {"null", "/etc/cron.allow/", "/etc/at.allow/"};
 		int fileIndex = 0;
 		String currFile = files[fileIndex];
 		
@@ -65,7 +66,7 @@ public class RJParser extends Parser {
 					System.out.print("%" + nextValue[i] + "%" + "\t");
 				}
 				System.out.println();
-				values.put(currFile.concat("/" + nextValue[8]), nextValue);
+				values.put(currFile.concat(nextValue[8]), nextValue);
 			}
 		}
 		
@@ -95,10 +96,9 @@ public class RJParser extends Parser {
 
 	public HashMap<String, String[]> read_crontab_info(File customerFile) { //Unsure how to parse, how does it look when they exist?
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
-		int id = 1;
-		String PID = Integer.toString(id);
-		
+		int line = 1;
+		String notSetupString = "No crontab has been set up for the following: \n";
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -106,24 +106,27 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			String[] nextValue = new String[4];
-			for (int i = 0; i < nextValue.length; i++) {
-				nextValue[i] = scanner.next();
+			String nextLine = scanner.nextLine();
+			System.out.println("line " + line++ + ": " + nextLine);
+			if (nextLine.startsWith("#") || nextLine.equals("")) System.out.println("im 12 btw haHAA");
+			else {
+				notSetupString = notSetupString.concat(nextLine.split(" ")[3] + ", ");
+				System.out.println("There is no crontab for "  + nextLine.split(" ")[3] + " set up");
 			}
-			nextValue[10] = scanner.nextLine();
-			
-			PID = Integer.toString(id);			
-			values.put(PID, nextValue);
-			id++;
 		}
 		
+		
 		return values;
+	}
+	
+	public String evaluate_crontab_info(HashMap<String, String[]> customerInfo) {
+		// Already implemented in read method oops
+		return "";
 	}
 	
 	public HashMap<String, String[]> read_diskvolume_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
-		int ID = 1;
 		
 		try {
 			scanner = new Scanner(customerFile);
@@ -132,26 +135,38 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			String[] nextValue = new String[6];
-			System.out.println("\nb44");
-			for (int i = 0; i < nextValue.length - 1; i++) {
-				nextValue[i] = scanner.next();
-				System.out.print(nextValue[i] + "\t");
+			//[Filesystem][Size][Used][Avail][Use%][Mounted on]
+			String[] nextValues = new String[6];
+			
+			for (int i = 0; i < nextValues.length - 1; i++) {
+				nextValues[i] = scanner.next();
 			}
-			nextValue[nextValue.length - 1] = scanner.nextLine();
-			values.put(Integer.toString(ID), nextValue);
-			ID++;
+			nextValues[5] = scanner.nextLine();
+			
+			for (int i = 0; i < nextValues.length; i++) {
+				System.out.print(nextValues[i] + "\t");
+			}
+			System.out.println();
+			
+			values.put(nextValues[5], nextValues);
 		}
 		
 		return values;
 	}
 
 	public String evaluate_diskvolume_info(HashMap<String, String[]> customerInfo) {
+		String returnString = "Current mounted discs(?): \n";
 		
+		Iterator itr = customerInfo.keySet().iterator();
 		
+		while (itr.hasNext()) {
+			String key = (String) itr.next();
+			returnString = returnString.concat(key + ", ");
+		}
 		
-		return "";
+		return returnString;
 	}
+	
 	
 	public HashMap<String, HashMap<String, String>> read_encrypted_disk_info(File customerFile) {
 		HashMap<String, HashMap<String, String>> values = new HashMap<String, HashMap<String, String>>(); 
@@ -183,6 +198,64 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
+	public String evaluate_encrypted_disk_info(HashMap<String, HashMap<String, String>> customerInfo) {
+		
+		Set<String> keys = customerInfo.keySet();
+		Iterator keysItr = keys.iterator();
+		
+		while (keysItr.hasNext()) {
+			String key = (String) keysItr.next();
+			System.out.print("key: " + key + ", ");
+			Set<String> keysKeys = customerInfo.get(key).keySet();
+			Iterator keysKeysItr = keysKeys.iterator();
+			
+			while (keysKeysItr.hasNext()) {
+				String keyKey = (String) keysKeysItr.next();
+				System.out.print("keyKey: " + keyKey + ": ");
+				String value = customerInfo.get(key).get(keyKey);
+				
+				System.out.println(value);
+			}
+		}
+		
+		
+		return "";
+	}
+	
+	public HashMap<String, String> read_environment_info(File customerFile) {
+		
+		HashMap<String, String> values = new HashMap<String, String>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String nextLine = scanner.nextLine();
+			String[] innerValues = nextLine.split("=");
+			if (innerValues[0].equals("LS_COLORS")) continue; //Blir svårare att parsea, tror inte det har något med säkerhet att göra så låter bli att läsa in
+			values.put(innerValues[0], innerValues[1]);
+		}
+		
+		return values;
+		
+	}
+	
+	public String evaluate_environment_info(HashMap<String, String> customerInfo) {
+		String returnString = "";
+		Iterator itr = customerInfo.keySet().iterator();
+		
+		while (itr.hasNext()) {
+			String key = (String) itr.next();
+			
+			System.out.println(key + " = " + customerInfo.get(key));
+		}
+		
+		return returnString;
+	}
+	
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
@@ -202,25 +275,6 @@ public class RJParser extends Parser {
 		}
 		
 		return values;
-	}
-
-	public HashMap<String, String> read_environment_info(File customerFile) {
-		
-		HashMap<String, String> values = new HashMap<String, String>(); 
-		
-		try {
-			scanner = new Scanner(customerFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		while (scanner.hasNext()) {
-			String[] innerValues = scanner.nextLine().split("=");
-			values.put(innerValues[0], innerValues[1]);
-		}
-		
-		return values;
-		
 	}
 	
 }
