@@ -24,7 +24,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "environment_info";		
+		test_name = "firewall_info";		
 		
 		//For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";

@@ -256,6 +256,57 @@ public class RJParser extends Parser {
 		return returnString;
 	}
 	
+	public HashMap<String, String[]> read_firewall_info(File customerFile) {
+	HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+	
+	String chain;
+	String policy;
+	String[] innerValues = new String[6];
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String next = scanner.next();
+			if (next.equals("Chain")) {
+				innerValues = scanner.nextLine().split(" ");
+				chain = innerValues[1];
+				policy = innerValues[3].substring(0, innerValues[3].length()-1);
+				System.out.println(chain + " : " + policy);
+				scanner.nextLine();
+				values.put(chain, new String[]{policy});
+			} else {
+				innerValues[0] = next;
+			
+			
+			for (int i = 1; i < innerValues.length - 1; i++) {
+				innerValues[i] = scanner.next();
+				System.out.print(innerValues[i] + "\t");
+			}
+			innerValues[5] = scanner.nextLine();
+			System.out.println(innerValues[5]);
+			}
+		}
+		
+		return values;
+	}
+	
+	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) {
+		
+		String returnString = "";
+		
+		if (customerInfo.get("INPUT")[0].equals("ACCEPT")) {
+			if (customerInfo.get("OUTPUT")[0].equals("ACCEPT")) {
+				if (customerInfo.get("FORWARD")[0].equals("ACCEPT"));
+			}
+		}
+		
+		return returnString;
+	}
+	
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
