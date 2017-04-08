@@ -294,14 +294,27 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
-	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) {
-		
+	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser är blockade?
+		int policy = 000;
 		String returnString = "";
-		
-		if (customerInfo.get("INPUT")[0].equals("ACCEPT")) {
-			if (customerInfo.get("OUTPUT")[0].equals("ACCEPT")) {
-				if (customerInfo.get("FORWARD")[0].equals("ACCEPT"));
-			}
+		if (customerInfo.get("INPUT")[0].equals("ACCEPT"))	policy += 1;
+		if (customerInfo.get("FORWARD")[0].equals("ACCEPT"))policy += 10;
+		if (customerInfo.get("OUTPUT")[0].equals("ACCEPT"))	policy += 100;
+
+		if (policy < 100) {
+			System.out.println(policy);
+			returnString = returnString.concat("Warning: There is no firewall set up for incoming traffic.\n");
+			policy -= 100;
+		} 
+		if (policy < 10) {
+			System.out.println(policy);
+			returnString = returnString.concat("Warning: There is no firewall set up for forwarding traffic.\n");
+			policy -= 10;
+		}
+		if (policy < 1) {
+			System.out.println(policy);
+			returnString = returnString.concat("Warning: There is no firewall set up for outgoing traffic.\n");
+			policy -= 1;
 		}
 		
 		return returnString;
