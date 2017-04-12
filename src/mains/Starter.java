@@ -3,6 +3,7 @@ package mains;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -13,7 +14,8 @@ public class Starter {
 
 	public static void main(String[] args) {
 		
-		HashMap<String, String[]> processes = new HashMap<String, String[]>();
+		//HashMap<String, String[]> processes = new HashMap<String, String[]>();
+		ArrayList<String> processes = new ArrayList<String>();
 
 		// Should be decided when running the file.
 		File resultDir;
@@ -24,7 +26,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "users_info";		
+		test_name = "sudoers_info";		
 
 		/*///For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";
@@ -51,8 +53,10 @@ public class Starter {
 		
 
 		try {
+		//	rjParser.getClass().getMethod("read_groups_info").getReturnType()
 			Method method = rjParser.getClass().getMethod("read_" + test_name, File.class);
-			processes = (HashMap<String, String[]>) method.invoke(rjParser, processesFile);
+		//	processes = (HashMap<String, String[]>) method.invoke(rjParser, processesFile);
+			processes = (ArrayList<String>) method.invoke(rjParser, processesFile);
 			Method method2 = rjParser.getClass().getMethod("evaluate_" + test_name, method.getReturnType());
 			System.out.println("\n");
 			System.out.println(method2.invoke(rjParser, processes));
