@@ -24,7 +24,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "users_info";		
+		test_name = "samba_info";		
 
 		/*///For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";
@@ -35,18 +35,18 @@ public class Starter {
 				+ test_name + "\\\\" + hostname + ".log");
 		
 	*/	
-		/*//For Linux
-		resultPath = "/home/jesper/Documents/remote_job_linux_osx-master-d98598cf1ea7ba905e77c62efb3b52a4bcacf366/result/";
+		//For Linux (Jesper)
+		resultPath = "/home/jesper/Documents/";
 		resultDir = new File(resultPath);
 		processesFile = new File(resultPath
-				+ test_name + "/" + hostname + ".log");*/
+				+ "/" + hostname + ".log");
 	
 		//For Linux (Stoff)
-				resultPath = "/home/stoff/Desktop/Thesis/result/";
+	/*			resultPath = "/home/stoff/Desktop/Thesis/result/";
 				resultDir = new File(resultPath);
 				processesFile = new File(resultPath
 						+ test_name + "/" + hostname + ".log");
-
+*/
 		RJParser rjParser = new RJParser();
 		
 

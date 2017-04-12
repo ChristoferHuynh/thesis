@@ -12,7 +12,7 @@ public class RJParser extends Parser {
 	@Override
 	public HashMap<String, String> read(File file) {
 		HashMap<String, String> values = new HashMap<String, String>(); 
-		
+
 		try {
 			scanner = new Scanner(file);
 		} catch (FileNotFoundException e) {
@@ -26,7 +26,7 @@ public class RJParser extends Parser {
 			System.out.println(nextValue);
 			values.put(nextKey, nextValue);
 		}
-		
+
 		return values;
 	}
 
@@ -35,14 +35,14 @@ public class RJParser extends Parser {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	public HashMap<String, String[]> read_cron_at_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 
 		String[] files = {"null", "/etc/cron.allow/", "/etc/at.allow/"};
 		int fileIndex = 0;
 		String currFile = files[fileIndex];
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -59,7 +59,7 @@ public class RJParser extends Parser {
 			}
 			else if (nextLine.contains("total")) currFile = files[++fileIndex];
 			else { 
-			//	String[] nextValue = nextLine.split("separator"); //Doesn't work with " " :(
+				//	String[] nextValue = nextLine.split("separator"); //Doesn't work with " " :(
 				String[] nextValue = new String[9];
 				for (int i = 0; i < nextValue.length; i++) {
 					nextValue[i] = scanner.next();
@@ -69,14 +69,14 @@ public class RJParser extends Parser {
 				values.put(currFile.concat(nextValue[8]), nextValue);
 			}
 		}
-		
+
 		return values;
 	}
 
 	public String evaluate_cron_at_info(HashMap<String, String[]> customerInfo) {
 		Iterator itr = customerInfo.keySet().iterator();
 		String returnString = "";
-		
+
 		while (itr.hasNext()){
 			String key = (String) itr.next();
 			String[] value = customerInfo.get(key);
@@ -114,20 +114,20 @@ public class RJParser extends Parser {
 				System.out.println("There is no crontab for "  + nextLine.split(" ")[3] + " set up");
 			}
 		}
-		
-		
+
+
 		return values;
 	}
-	
+
 	public String evaluate_crontab_info(HashMap<String, String[]> customerInfo) {
 		// Already implemented in read method oops
 		return "";
 	}
-	
+
 	public HashMap<String, String[]> read_diskvolume_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
-		
+
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -137,45 +137,45 @@ public class RJParser extends Parser {
 		while (scanner.hasNext()) {
 			//[Filesystem][Size][Used][Avail][Use%][Mounted on]
 			String[] nextValues = new String[6];
-			
+
 			for (int i = 0; i < nextValues.length - 1; i++) {
 				nextValues[i] = scanner.next();
 			}
 			nextValues[5] = scanner.nextLine();
-			
+
 			for (int i = 0; i < nextValues.length; i++) {
 				System.out.print(nextValues[i] + "\t");
 			}
 			System.out.println();
-			
+
 			values.put(nextValues[5], nextValues);
 		}
-		
+
 		return values;
 	}
 
 	public String evaluate_diskvolume_info(HashMap<String, String[]> customerInfo) {
 		String returnString = "Current mounted discs(?): \n";
-		
+
 		Iterator itr = customerInfo.keySet().iterator();
-		
+
 		while (itr.hasNext()) {
 			String key = (String) itr.next();
 			returnString = returnString.concat(key + ", ");
 		}
-		
+
 		return returnString;
 	}
-	
-	
+
+
 	public HashMap<String, HashMap<String, String>> read_encrypted_disk_info(File customerFile) {
 		HashMap<String, HashMap<String, String>> values = new HashMap<String, HashMap<String, String>>(); 
 		String SingleLine;
 		String[] SingleLineVector;
 		String[] LineVectorVector; //lol..
-		
+
 		HashMap<String, String> innerValues = new HashMap<String, String>();
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -197,35 +197,35 @@ public class RJParser extends Parser {
 		}
 		return values;
 	}
-	
+
 	public String evaluate_encrypted_disk_info(HashMap<String, HashMap<String, String>> customerInfo) {
-		
+
 		Set<String> keys = customerInfo.keySet();
 		Iterator keysItr = keys.iterator();
-		
+
 		while (keysItr.hasNext()) {
 			String key = (String) keysItr.next();
 			System.out.print("key: " + key + ", ");
 			Set<String> keysKeys = customerInfo.get(key).keySet();
 			Iterator keysKeysItr = keysKeys.iterator();
-			
+
 			while (keysKeysItr.hasNext()) {
 				String keyKey = (String) keysKeysItr.next();
 				System.out.print("keyKey: " + keyKey + ": ");
 				String value = customerInfo.get(key).get(keyKey);
-				
+
 				System.out.println(value);
 			}
 		}
-		
-		
+
+
 		return "";
 	}
-	
+
 	public HashMap<String, String> read_environment_info(File customerFile) {
-		
+
 		HashMap<String, String> values = new HashMap<String, String>(); 
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -238,31 +238,31 @@ public class RJParser extends Parser {
 			if (innerValues[0].equals("LS_COLORS")) continue; //Blir sv�rare att parsea, tror inte det har n�got med s�kerhet att g�ra s� l�ter bli att l�sa in
 			values.put(innerValues[0], innerValues[1]);
 		}
-		
+
 		return values;
-		
+
 	}
-	
+
 	public String evaluate_environment_info(HashMap<String, String> customerInfo) {
 		String returnString = "";
 		Iterator itr = customerInfo.keySet().iterator();
-		
+
 		while (itr.hasNext()) {
 			String key = (String) itr.next();
-			
+
 			System.out.println(key + " = " + customerInfo.get(key));
 		}
-		
+
 		return returnString;
 	}
-	
+
 	public HashMap<String, String[]> read_firewall_info(File customerFile) {
-	HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-	
-	String chain;
-	String policy;
-	String[] innerValues = new String[6];
-		
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+
+		String chain;
+		String policy;
+		String[] innerValues = new String[6];
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -280,20 +280,20 @@ public class RJParser extends Parser {
 				values.put(chain, new String[]{policy});
 			} else {
 				innerValues[0] = next;
-			
-			
-			for (int i = 1; i < innerValues.length - 1; i++) {
-				innerValues[i] = scanner.next();
-				System.out.print(innerValues[i] + "\t");
-			}
-			innerValues[5] = scanner.nextLine();
-			System.out.println(innerValues[5]);
+
+
+				for (int i = 1; i < innerValues.length - 1; i++) {
+					innerValues[i] = scanner.next();
+					System.out.print(innerValues[i] + "\t");
+				}
+				innerValues[5] = scanner.nextLine();
+				System.out.println(innerValues[5]);
 			}
 		}
-		
+
 		return values;
 	}
-	
+
 	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
 		int policy = 000;
 		String returnString = "";
@@ -316,13 +316,13 @@ public class RJParser extends Parser {
 			returnString = returnString.concat("Warning: There is no firewall set up for outgoing traffic.\n");
 			policy -= 1;
 		}
-		
+
 		return returnString;
 	}
-	
+
 	public HashMap<String, String[]> read_groups_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -333,46 +333,46 @@ public class RJParser extends Parser {
 			String[] innerValues = scanner.nextLine().split(":");
 			values.put(innerValues[0], innerValues);
 		}
-		
+
 		return values;
 	}
-	
+
 	public String evaluate_groups_info(HashMap<String, String[]> customerInfo) {
 		String returnString = "";
-		
+
 		try {
 			String[] rootMembers = customerInfo.get("root")[3].split(",");
 			for (int i = 0; i < rootMembers.length; i++) {
 				System.out.println(rootMembers[i]);
 				returnString.concat("Warning! The user " + rootMembers[i] 
-			  					+ " has access to root");
+						+ " has access to root");
 			}
 		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
 			System.out.println("no users have access to root");
 		}
-		
 
-		
+
+
 		return returnString;
-		
+
 	}
-	
+
 	public HashMap<String, String[]> read_lastlog_info(File customerFiler) {
 		//IDK
 		return null;
 	}
-	
+
 	public String evaluate_lastlog_info(HashMap<String, String[]> customerInfo) {
 		//IDK
 		return null;
 	}
-	
+
 	public HashMap<String, String[]> read_modprobe_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		String nextLine;
 		String modprobe = "";
 		String[] innerValues;
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -390,18 +390,145 @@ public class RJParser extends Parser {
 			innerValues = nextLine.split(" ");
 			values.put(innerValues[0], innerValues);
 		}
-		
+
 		return values;
 	}
-	
+
 	public String evaluate_modprobe_info(HashMap<String, String[]> customerInfo) {
 		//IDK
 		return null;
 	}
-	
+
+	public HashMap<String, String[]> read_networkvolume_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		String nextLine;
+		String modprobe = "";
+		String[] innerValues;
+
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			nextLine = scanner.nextLine();
+			if (nextLine.contains("#")) break;
+			innerValues = nextLine.split(" ");
+			values.put(innerValues[2], innerValues);
+		}
+
+		while (scanner.hasNext()) {
+			nextLine = scanner.nextLine();
+			if (nextLine.contains("#")) continue;
+			innerValues = nextLine.split(" ");
+			values.put(innerValues[1], innerValues);
+		}
+
+		return values;
+	}
+
+	public String evaluate_networkvolume_info(HashMap<String, String[]> customerInfo) {
+		//IDK
+		return null;
+	}
+
+
+	public HashMap<String, String[]> read_open_connections_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		String nextValue = null;
+
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (scanner.hasNext()) scanner.nextLine();
+		while (scanner.hasNext()) {
+			String nextLine = scanner.nextLine();
+			if (nextLine.contains("COMMAND")) {
+				break;
+			}
+			String[] valuesWithSpace = nextLine.split(" ");
+			String[] innerValues = new String[7];
+			int j = 0;
+			for (int i = 0; i < valuesWithSpace.length; i++) {
+				String string = valuesWithSpace[i];
+				if (!string.equals("")) {
+					innerValues[j++] = string;
+				}
+			}
+			//		[Netid State][Recv-Q][Send-Q][Local Address:Port][Peer Address:Port][users(opt)] 
+			values.put(innerValues[4], innerValues);
+		}
+
+		while (scanner.hasNextLine()) {
+			//COMMAND    PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+			String[] innerValues = new String[9];
+
+			for (int i = 0; i < innerValues.length - 1; i++) {
+				innerValues[i] = scanner.next();
+				System.out.println(innerValues[i]);
+			}
+			innerValues[innerValues.length - 1] = scanner.nextLine();
+			System.out.println(innerValues[innerValues.length - 1]);
+		}
+
+		return values;
+	}
+
+
+	public String evaluate_open_connections_info(HashMap<String, String[]> customerInfo) {
+		String returnString = "";
+		//IDK 
+		for (String key : customerInfo.keySet()) {
+			System.out.println("\nkey: " + key);
+			String[] values = customerInfo.get(key);
+			for (int i = 0; i < values.length; i++) {
+				System.out.print(" " + values[i]);
+
+			}
+		}
+
+		return returnString;
+	}
+
+	public HashMap<String, String> read_passwdpolicy_info(File customerFile) {
+		HashMap<String, String> values = new HashMap<String, String>(); 
+
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String nextKey = scanner.next();
+			if (nextKey.contains("#")) {
+				scanner.nextLine();
+				continue;
+			}
+			String nextValue = scanner.next();
+			values.put(nextKey, nextValue);
+		}
+
+		return values;
+	}
+
+	public String evaluate_passwdpolicy_info(HashMap<String, String> customerInfo) {
+		String returnString = "";
+		//IDK 
+		for (String key : customerInfo.keySet()) {
+			System.out.println("\nkey: " + key + " :: " + customerInfo.get(key));
+		}
+
+		return returnString;
+	}
+
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -416,13 +543,87 @@ public class RJParser extends Parser {
 			nextValue[10] = scanner.nextLine();
 			values.put(nextValue[1], nextValue);
 		}
-		
+
 		return values;
 	}
 	
+
+	public String evaluate_processes_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+
+		String returnString = "";
+
+		for (String name: customerInfo.keySet()){
+
+			String key = name.toString();
+			System.out.print("\n");
+			String[] value = customerInfo.get(name);
+			for (int i = 0; i < value.length; i++){
+				System.out.print(" " + value[i]);  
+			}
+		}
+
+		return returnString;
+	}
+	
+	public HashMap<String, String[]> read_samba_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		String level = null;
+
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String nextLine = scanner.nextLine();
+			
+			if (nextLine.contains("No such file or directory")) {
+				values.put("/etc/samba/smb.conf", new String[]{"No such file or directory"});
+				return values;
+			}
+			
+			if (nextLine.contains("#") || nextLine.equals("")) {
+				scanner.nextLine();
+				continue;
+			}
+			if (nextLine.contains("[")) {
+				level = nextLine;
+				continue;
+			}
+			System.out.println("nextLine: " + nextLine);
+			
+			String[] nextValues = nextLine.split("=");
+			
+
+			values.put(nextValues[0], new String[]{nextValues[1], level});
+		}
+
+		return values;
+	}
+
+	public String evaluate_samba_info(HashMap<String, String[]> customerInfo) {
+		String returnString = "";
+		//IDK 
+		for (String name: customerInfo.keySet()){
+
+        String key = name.toString();
+        System.out.print("\n key: " + key + "\n");
+        String[] value = customerInfo.get(name);
+        for (int i = 0; i < value.length; i++){
+        	System.out.print("value" + i + ": " + value[i] + ", ");  
+        }
+
+	} 
+
+		return returnString;
+	}
+
+	
+
 	public HashMap<String, String[]> read_users_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
-		
+
 		try {
 			scanner = new Scanner(customerFile);
 		} catch (FileNotFoundException e) {
@@ -433,7 +634,7 @@ public class RJParser extends Parser {
 			String[] innerValues = scanner.nextLine().split(":");
 			values.put(innerValues[0], innerValues);
 		}
-		
+
 		/*for (String name: values.keySet()){
 
             String key = name.toString();
@@ -445,19 +646,19 @@ public class RJParser extends Parser {
             }
 
 		} */
-    	
+
 		return values;
-		
+
 	}
-	
+
 	public String evaluate_users_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
-		
+
 		String returnString = "";
 		return returnString;
 	}
-	
-	
+
+
 }
 
-	
+
 
