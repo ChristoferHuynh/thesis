@@ -2,6 +2,7 @@ package parsers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -108,7 +109,7 @@ public class RJParser extends Parser {
 		while (scanner.hasNext()) {
 			String nextLine = scanner.nextLine();
 			System.out.println("line " + line++ + ": " + nextLine);
-			if (nextLine.startsWith("#") || nextLine.equals("")) System.out.println("im 12 btw haHAA");
+			if (nextLine.startsWith("#") || nextLine.equals("")) System.out.println("inside");
 			else {
 				notSetupString = notSetupString.concat(nextLine.split(" ")[3] + ", ");
 				System.out.println("There is no crontab for "  + nextLine.split(" ")[3] + " set up");
@@ -620,7 +621,190 @@ public class RJParser extends Parser {
 	}
 
 	
+	public HashMap<String, String> read_sshd_info(File customerFile) {
+		HashMap<String, String> values = new HashMap<String, String>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()){
+			
+			String nextKey = scanner.next();
+			
+			if (nextKey.contains("#")){
+				scanner.nextLine();
+				continue;
+			}
+			
+			String nextValue = scanner.next();
+			values.put(nextKey, nextValue);
+		}	
+		
+	/*	for (String name: values.keySet()){
+            String key = name.toString();
+            System.out.print("\n" + key + "::" + values.get(key));
 
+		}*/
+		
+		return values;
+	}
+	
+	public String evaluate_sshd_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		
+		String returnString = "";
+		return returnString;
+	}
+	
+	public HashMap<String, String[]> read_startup_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (int i = 0; i < 2; i++){
+		scanner.nextLine();
+		}
+		
+			while (scanner.hasNext()) {
+			String[] innerValues = new String[9];
+			
+				for (int i=0; i<innerValues.length; i++){
+					innerValues[i] = scanner.next();
+				}
+				
+				values.put(innerValues[8], innerValues);
+			}
+	/*	for (String name: values.keySet()){
+            String key = name.toString();
+            System.out.print("\n");
+            String[] value = values.get(name);
+            for (int i = 1; i < value.length; i++){
+              System.out.print(value[i] + " ");  
+            }
+
+		}*/
+		
+		return values;
+		
+	}
+	
+	public String evaluate_startup_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		
+		String returnString = "";
+		return returnString;
+	}
+	
+	public ArrayList<String> read_sudoers_info(File customerFile) {
+		ArrayList<String> values = new ArrayList<String>();
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String innerValues = scanner.nextLine();
+			values.add(innerValues);
+		}
+		
+		
+		/*for (String name: values){
+
+            String key = name.toString();
+            System.out.print("\n"+ key);
+          }*/
+	
+    	
+		return values;
+		
+	}
+
+	
+	public String evaluate_sudoers_info(ArrayList<String> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		
+		String returnString = "";
+		
+		if (customerInfo.size() > 20){
+			returnString = "The system may have other users with unrestricted privileges.";
+		}
+		
+		return returnString;
+	}
+	
+	public ArrayList<String> read_suid_files_info(File customerFile) {
+		ArrayList<String> values = new ArrayList<String>();
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String innerValues = scanner.nextLine();
+			values.add(innerValues);
+		}
+		
+		/*for (String name: values){
+
+            String key = name.toString();
+            System.out.print("\n"+ key);
+          }*/
+	
+    	
+		return values;
+		
+	}
+
+	
+	public String evaluate_suid_files_info(ArrayList<String> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		
+		String returnString = "";
+		return returnString;
+	}
+	
+	public HashMap<String, String[]> read_system_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String[] innerValues = scanner.nextLine().split(" ");
+			values.put(innerValues[0], innerValues);
+		}
+		
+		/*for (String name: values.keySet()){
+
+            String key = name.toString();
+            System.out.print("\n"+ key);
+            String[] value = values.get(name);
+            for (int i = 1; i < value.length; i++){
+              System.out.print(" " + value[i]);  
+            }
+
+		}*/
+    	
+		return values;
+		
+	}
+	
+	public String evaluate_system_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		
+		String returnString = "";
+		return returnString;
+	}
+	
 	public HashMap<String, String[]> read_users_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 
