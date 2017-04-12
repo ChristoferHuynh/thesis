@@ -235,7 +235,7 @@ public class RJParser extends Parser {
 		while (scanner.hasNext()) {
 			String nextLine = scanner.nextLine();
 			String[] innerValues = nextLine.split("=");
-			if (innerValues[0].equals("LS_COLORS")) continue; //Blir svårare att parsea, tror inte det har något med säkerhet att göra så låter bli att läsa in
+			if (innerValues[0].equals("LS_COLORS")) continue; //Blir svï¿½rare att parsea, tror inte det har nï¿½got med sï¿½kerhet att gï¿½ra sï¿½ lï¿½ter bli att lï¿½sa in
 			values.put(innerValues[0], innerValues[1]);
 		}
 		
@@ -294,7 +294,7 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
-	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser är blockade?
+	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser ï¿½r blockade?
 		int policy = 000;
 		String returnString = "";
 		if (customerInfo.get("INPUT")[0].equals("ACCEPT"))	policy += 1;
@@ -341,4 +341,44 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
+	public HashMap<String, String[]> read_users_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String[] innerValues = scanner.nextLine().split(":");
+			values.put(innerValues[0], innerValues);
+		}
+		
+		/*for (String name: values.keySet()){
+
+            String key = name.toString();
+            System.out.print("\n"+ 
+            key);
+            String[] value = values.get(name);
+            for (int i = 1; i < value.length; i++){
+              System.out.print(" " + value[i]);  
+            }
+
+		} */
+    	
+		return values;
+		
+	}
+	
+	public String evaluate_users_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser ï¿½r blockade?
+		
+		String returnString = "";
+		return returnString;
+	}
+	
+	
 }
+
+	
+
