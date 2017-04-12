@@ -320,6 +320,43 @@ public class RJParser extends Parser {
 		return returnString;
 	}
 	
+	public HashMap<String, String[]> read_groups_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String[] innerValues = scanner.nextLine().split(":");
+			values.put(innerValues[0], innerValues);
+		}
+		
+		return values;
+	}
+	
+	public String evaluate_groups_info(HashMap<String, String[]> customerInfo) {
+		String returnString = "";
+		
+		try {
+			String[] rootMembers = customerInfo.get("root")[3].split(",");
+			for (int i = 0; i < rootMembers.length; i++) {
+				System.out.println(rootMembers[i]);
+				returnString.concat("Warning! The user " + rootMembers[i] 
+			  					+ " has access to root");
+			}
+		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+			System.out.println("no users have access to root");
+		}
+		
+
+		
+		return returnString;
+		
+	}
+	
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
