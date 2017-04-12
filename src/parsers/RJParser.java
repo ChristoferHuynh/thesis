@@ -357,6 +357,48 @@ public class RJParser extends Parser {
 		
 	}
 	
+	public HashMap<String, String[]> read_lastlog_info(File customerFiler) {
+		//IDK
+		return null;
+	}
+	
+	public String evaluate_lastlog_info(HashMap<String, String[]> customerInfo) {
+		//IDK
+		return null;
+	}
+	
+	public HashMap<String, String[]> read_modprobe_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		String nextLine;
+		String modprobe = "";
+		String[] innerValues;
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			nextLine = scanner.nextLine();
+			if (nextLine.contains("Module")) break;
+			modprobe = modprobe.concat("%" + nextLine);
+		}
+		values.put("modprobe.d", modprobe.split("%"));
+		while (scanner.hasNext()) {
+			nextLine = scanner.nextLine();
+			innerValues = nextLine.split(" ");
+			values.put(innerValues[0], innerValues);
+		}
+		
+		return values;
+	}
+	
+	public String evaluate_modprobe_info(HashMap<String, String[]> customerInfo) {
+		//IDK
+		return null;
+	}
+	
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		
