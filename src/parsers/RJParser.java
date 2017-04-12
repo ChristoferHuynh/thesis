@@ -235,7 +235,7 @@ public class RJParser extends Parser {
 		while (scanner.hasNext()) {
 			String nextLine = scanner.nextLine();
 			String[] innerValues = nextLine.split("=");
-			if (innerValues[0].equals("LS_COLORS")) continue; //Blir svårare att parsea, tror inte det har något med säkerhet att göra så låter bli att läsa in
+			if (innerValues[0].equals("LS_COLORS")) continue; //Blir svï¿½rare att parsea, tror inte det har nï¿½got med sï¿½kerhet att gï¿½ra sï¿½ lï¿½ter bli att lï¿½sa in
 			values.put(innerValues[0], innerValues[1]);
 		}
 		
@@ -294,7 +294,7 @@ public class RJParser extends Parser {
 		return values;
 	}
 	
-	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser är blockade?
+	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser ï¿½r blockade?
 		int policy = 000;
 		String returnString = "";
 		if (customerInfo.get("INPUT")[0].equals("ACCEPT"))	policy += 1;
@@ -318,6 +318,43 @@ public class RJParser extends Parser {
 		}
 		
 		return returnString;
+	}
+	
+	public HashMap<String, String[]> read_groups_info(File customerFile) {
+		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
+		
+		try {
+			scanner = new Scanner(customerFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (scanner.hasNext()) {
+			String[] innerValues = scanner.nextLine().split(":");
+			values.put(innerValues[0], innerValues);
+		}
+		
+		return values;
+	}
+	
+	public String evaluate_groups_info(HashMap<String, String[]> customerInfo) {
+		String returnString = "";
+		
+		try {
+			String[] rootMembers = customerInfo.get("root")[3].split(",");
+			for (int i = 0; i < rootMembers.length; i++) {
+				System.out.println(rootMembers[i]);
+				returnString.concat("Warning! The user " + rootMembers[i] 
+			  					+ " has access to root");
+			}
+		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+			System.out.println("no users have access to root");
+		}
+		
+
+		
+		return returnString;
+		
 	}
 	
 	public HashMap<String, String[]> read_processes_info(File customerFile) {
