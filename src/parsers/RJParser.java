@@ -630,7 +630,11 @@ public class RJParser extends Parser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if (scanner.hasNext() && scanner.nextLine().contains("No such file or directory")) {
+			values.put("/etc/ssh/sshd_config", "No such file or directory");
+		}
 		while (scanner.hasNext()){
+			
 			
 			String nextKey = scanner.next();
 			

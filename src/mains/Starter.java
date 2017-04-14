@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import parsers.LynisParser;
 import parsers.RJParser;
+import parsers.UnixParser;
 
 public class Starter {
 
@@ -38,7 +40,7 @@ public class Starter {
 		
 	*/	
 		//For Linux (Jesper)
-		resultPath = "/home/jesper/Documents/";
+		resultPath = "/home/jesper/Documents/remote_job_linux_osx-master-d98598cf1ea7ba905e77c62efb3b52a4bcacf366/result";
 		resultDir = new File(resultPath);
 		processesFile = new File(resultPath
 				+ "/" + hostname + ".log");
@@ -51,7 +53,7 @@ public class Starter {
 */
 		RJParser rjParser = new RJParser();
 		
-
+/*
 		try {
 		//	rjParser.getClass().getMethod("read_groups_info").getReturnType()
 			Method method = rjParser.getClass().getMethod("read_" + test_name, File.class);
@@ -64,6 +66,28 @@ public class Starter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
+		
+		/*
+		LynisParser lynisParser = new LynisParser();
+		
+		File customerFile = new File("/tmp/lynis.log");
+		HashMap<String, String[]> lynisMap = new HashMap<String, String[]>();
+		lynisMap = lynisParser.read(customerFile);
+		
+		System.out.println("REEEEEEEEEEEEEE");
+		lynisParser.print(lynisMap);
+		System.out.println(lynisParser.print(lynisMap));
+		*/
+		
+		UnixParser unixParser = new UnixParser();
+		File customerFile = new File("/home/jesper/Downloads/unix-privesc-check-1.4/outputstandard.txt");
+		File customerFile2 = new File("/home/jesper/Downloads/unix-privesc-check-1.4/outputdetailed.txt");
+
+		HashMap<String, String> warnings = new HashMap<String, String>();
+		warnings = unixParser.read(customerFile);
+		unixParser.print(warnings);
+		System.out.println(unixParser.print(warnings));
 		
 		
 		
