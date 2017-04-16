@@ -9,26 +9,41 @@ import parsers.LynisParser;
 import parsers.RJParser;
 import parsers.UnixParser;
 
-public class RealStarter {
-
+public class RJStarter {
+	
 	public static void main(String[] args) {
+		System.out.println("I am a meme");
+	}
+
+	
+	//Initiate Parsers
+	RJParser rjParser = new RJParser();
+	LynisParser lynisParser = new LynisParser();
+	UnixParser unixParser = new UnixParser();
+	
+	//Initate Files
+	File rjResults;
+	File[] rjFiles;
+	File lynisFile;
+	File unixFile;
+	
+	String finalString = "";
+	String rjResultPath;
+	//"/home/jesper/Documents/remote_job_linux_osx-master-d98598cf1ea7ba905e77c62efb3b52a4bcacf366/result"
+	String rjSavePath;
+	///home/jesper/Desktop/RJOutput.txt
+	
+	public String test() {
+		return "memes";
+	}
 		
-		//Initiate Parsers
-		RJParser rjParser = new RJParser();
-		LynisParser lynisParser = new LynisParser();
-		UnixParser unixParser = new UnixParser();
-		
-		//Initate Files
-		File rjResults;
-		File[] rjFiles;
-		File lynisFile;
-		File unixFile;
-		
-		String finalString = "";
-		String rjResultPath;
-		
+	
+	public void evaluate(String path, String save) {
 		//remote job
-		rjResults = new File("/home/jesper/Documents/remote_job_linux_osx-master-d98598cf1ea7ba905e77c62efb3b52a4bcacf366/result");
+		rjResultPath = path;
+		rjSavePath = save;
+		
+		rjResults = new File(rjResultPath);
 		rjFiles = rjResults.listFiles();
 		
 		
@@ -57,7 +72,7 @@ public class RealStarter {
 		PrintWriter out;
 
 		try {
-			out = new PrintWriter("/home/jesper/Desktop/RJOutput.txt");
+			out = new PrintWriter(rjSavePath);
 			System.out.println(finalString);
 			out.println(finalString);
 			out.close();
