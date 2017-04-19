@@ -121,7 +121,7 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_crontab_info(HashMap<String, String[]> customerInfo) {
-		// Already implemented in read method oops
+		// Already implemented in read method
 		return "";
 	}
 
@@ -513,16 +513,19 @@ public class RJParser extends Parser {
 			String nextValue = scanner.next();
 			values.put(nextKey, nextValue);
 		}
-
+		
 		return values;
 	}
 
 	public String evaluate_passwdpolicy_info(HashMap<String, String> customerInfo) {
 		String returnString = "";
-		//IDK 
-		for (String key : customerInfo.keySet()) {
-			System.out.println("\nkey: " + key + " :: " + customerInfo.get(key));
+		if (customerInfo.get("ENCRYPT_METHOD").equals("MD5")){
+			returnString = "Your currently password encrypting method is MD5. "
+					+ "\nYou should consider changing the encrypting method to SHA256 or SHA516.";
 		}
+		/*for (String key : customerInfo.keySet()) {
+			System.out.println("\nkey: " + key + " :: " + customerInfo.get(key));
+		}*/
 
 		return returnString;
 	}

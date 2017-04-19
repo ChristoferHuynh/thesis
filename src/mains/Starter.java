@@ -28,7 +28,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "samba_info";		
+		test_name = "passwdpolicy_info";		
 
 		/*///For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";
@@ -39,21 +39,21 @@ public class Starter {
 				+ test_name + "\\\\" + hostname + ".log");
 		
 	*/	
-		//For Linux (Jesper)
+	/*	//For Linux (Jesper)
 		resultPath = "/home/jesper/Documents/remote_job_linux_osx-master-d98598cf1ea7ba905e77c62efb3b52a4bcacf366/result";
 		resultDir = new File(resultPath);
 		processesFile = new File(resultPath
-				+ "/" + hostname + ".log");
+				+ "/" + hostname + ".log");*/
 	
 		//For Linux (Stoff)
-	/*			resultPath = "/home/stoff/Desktop/Thesis/result/";
+			resultPath = "/home/stoff/Desktop/Thesis/result/";
 				resultDir = new File(resultPath);
 				processesFile = new File(resultPath
 						+ test_name + "/" + hostname + ".log");
-*/
+
 		RJParser rjParser = new RJParser();
 		
-/*
+
 		try {
 		//	rjParser.getClass().getMethod("read_groups_info").getReturnType()
 			Method method = rjParser.getClass().getMethod("read_" + test_name, File.class);
@@ -66,7 +66,7 @@ public class Starter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
 		
 		/*
 		LynisParser lynisParser = new LynisParser();
@@ -80,7 +80,7 @@ public class Starter {
 		System.out.println(lynisParser.print(lynisMap));
 		*/
 		
-		UnixParser unixParser = new UnixParser();
+	/*	UnixParser unixParser = new UnixParser();
 		File customerFile = new File("/home/jesper/Downloads/unix-privesc-check-1.4/outputstandard.txt");
 		File customerFile2 = new File("/home/jesper/Downloads/unix-privesc-check-1.4/outputdetailed.txt");
 
@@ -88,7 +88,7 @@ public class Starter {
 		warnings = unixParser.read(customerFile);
 		unixParser.print(warnings);
 		System.out.println(unixParser.print(warnings));
-		
+		*/
 		
 		
 		/*
