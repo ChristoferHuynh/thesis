@@ -121,7 +121,8 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_crontab_info(HashMap<String, String[]> customerInfo) {
-		//Make sure that users cannot use cronjobs that allows them to access previously unaccessable files
+	//Make sure that users cannot use cronjobs that allows them to access previously unaccessable files
+
 		return "";
 	}
 
@@ -522,7 +523,7 @@ public class RJParser extends Parser {
 			String nextValue = scanner.next();
 			values.put(nextKey, nextValue);
 		}
-
+		
 		return values;
 	}
 
@@ -530,14 +531,19 @@ public class RJParser extends Parser {
 		//Compare values with acceptable values
 		String returnString = "";
 
+		if (customerInfo.get("ENCRYPT_METHOD").equals("MD5")){
+			returnString = "Your currently password encrypting method is MD5. "
+					+ "\nYou should consider changing the encrypting method to SHA256 or SHA516.";
+		}
 		
 		if (Integer.parseInt(customerInfo.get("PASS_MIN_DAYS")) > 0) {
 			returnString = returnString.concat("Warning: You have to wait " + customerInfo.get("PASS_MIN_DAYS") 
 				+ "days to change password, this can be a security risk in case of accidental password change.");
 		}
-		for (String key : customerInfo.keySet()) {
+
+		/*for (String key : customerInfo.keySet()) {
 			System.out.println("\nkey: " + key + " :: " + customerInfo.get(key));
-		}
+		}*/
 
 		return returnString;
 	}
