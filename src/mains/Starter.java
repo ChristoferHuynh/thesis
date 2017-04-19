@@ -28,7 +28,7 @@ public class Starter {
 		File processesFile;
 		
 		hostname = "jesper-Aspire-E5-571";
-		test_name = "passwdpolicy_info";		
+		test_name = "users_info";		
 
 		/*///For Windows
 		resultPath = "C:\\\\Users\\\\Jesper\\\\Downloads\\\\result\\\\result\\\\";

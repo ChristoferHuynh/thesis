@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
+import sun.awt.SunHints.Value;
+
 public class RJParser extends Parser {
 
 	@Override
@@ -537,8 +539,8 @@ public class RJParser extends Parser {
 		}
 		
 		if (Integer.parseInt(customerInfo.get("PASS_MIN_DAYS")) > 0) {
-			returnString = returnString.concat("Warning: You have to wait " + customerInfo.get("PASS_MIN_DAYS") 
-				+ "days to change password, this can be a security risk in case of accidental password change.");
+			returnString = returnString.concat("Warning: You have to wait " + customerInfo.get("PASS_MIN_DAYS")
+				+ " days to change password, this can be a security risk in case of accidental password change.");
 		}
 
 		/*for (String key : customerInfo.keySet()) {
@@ -839,7 +841,7 @@ public class RJParser extends Parser {
 			values.put(innerValues[0], innerValues);
 		}
 
-		/*for (String name: values.keySet()){
+	/*	for (String name: values.keySet()){
 
             String key = name.toString();
             System.out.print("\n"+ 
@@ -856,8 +858,42 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_users_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
-
+		//If a user has a UID with 0, that means they have super user rights, which is not good.
+		//User with password bit ! and * will get warnings.
 		String returnString = "";
+		boolean [] risks = new boolean [3];
+		
+		for (String name: customerInfo.keySet()){
+
+            String key = name.toString();
+          //  System.out.print("\n"+ 
+          // key);
+            String[] value = customerInfo.get(name);
+           // System.out.println(" " + value[2]);  
+            if (value[2].equals("0") && !key.equals("root")){
+            	returnString += "User " + "'" + key + "'" + " has super user rights\n";
+            	risks[0] = true;
+            }
+            
+            if (value[1].equals("!")){
+            	returnString += "User " + "'" + key + "'" + " is stored in /etc/security/passwd and is not encrypted\n";
+            	risks[1] = true;
+            }else if (value[1].equals("*")) {
+            	returnString += "User " + "'" + key + "'" + " has an invalid password\n";
+            	risks[2] = true;
+            }
+		}
+		
+		if (risks[0]){
+			returnString += "\nYou should change the users' priviliges";
+		}
+		if (risks[1]){
+			returnString += "\nYou should encrypt the users' password";
+		}
+		if (risks[2]){
+			returnString += "\nYou should change users' password to a valid one";
+		}
+		
 		return returnString;
 	}
 
