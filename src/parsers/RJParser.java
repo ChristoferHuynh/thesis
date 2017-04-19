@@ -715,13 +715,15 @@ public class RJParser extends Parser {
 	}
 	
 	public String evaluate_startup_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
-		
+		//Find unusual programs
+		//Make sure important programs are there
 		String returnString = "";
 		return returnString;
 	}
 	
-	public ArrayList<String> read_sudoers_info(File customerFile) {
-		ArrayList<String> values = new ArrayList<String>();
+	public HashMap<String, String> read_sudoers_info(File customerFile) {
+		HashMap<String, String> values = new HashMap<String, String>();
+		int id = 1;
 		
 		try {
 			scanner = new Scanner(customerFile);
@@ -730,8 +732,14 @@ public class RJParser extends Parser {
 			e.printStackTrace();
 		}
 		while (scanner.hasNext()) {
-			String innerValues = scanner.nextLine();
-			values.add(innerValues);
+			boolean group = false;
+			String nextValue = scanner.next();
+			if (nextValue.contains("#") || nextValue.contains("Defaults")) {
+				scanner.nextLine();
+				continue;
+			}
+			String innerValues = nextValue.concat(" " + scanner.nextLine());
+			values.put(Integer.toString(id), innerValues);
 		}
 		
 		
@@ -747,13 +755,39 @@ public class RJParser extends Parser {
 	}
 
 	
-	public String evaluate_sudoers_info(ArrayList<String> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
-		
+	public String evaluate_sudoers_info(HashMap<String, String> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
 		String returnString = "";
+		String user;
+		String values;
+		String username;
+		String hosts;
+		String targetuser;
+		String command;
 		
-		if (customerInfo.size() > 20){
-			returnString = "The system may have other users with unrestricted privileges.";
+		for (String key : customerInfo.keySet()) {
+			values = customerInfo.get(key);
+			System.out.println(values);
+			Scanner stringScan = new Scanner(values);
+			user = stringScan.next();
+			String nextShit = stringScan.nextLine().replaceAll("\\W", " ").trim();
+			stringScan = new Scanner(nextShit);
+			System.out.println(nextShit);
+			username = stringScan.next().trim();
+			hosts = stringScan.next().trim();
+			targetuser = stringScan.next().trim();
+			command = stringScan.nextLine().trim();
+			
+			System.out.println("AHSDIASDIOSA");
+			System.out.println(user);
+			System.out.println(username);
+			System.out.println(hosts);
+			System.out.println(targetuser);
+			System.out.println(command);
+			if (key.contains("%")) user = "group";
+			
+			
 		}
+		
 		
 		return returnString;
 	}
