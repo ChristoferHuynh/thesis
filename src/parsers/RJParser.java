@@ -531,7 +531,7 @@ public class RJParser extends Parser {
 		String returnString = "";
 
 		
-		if (Integer.parseInt(customerInfo.get("PASS_MIN_DAYS")) == 0) {
+		if (Integer.parseInt(customerInfo.get("PASS_MIN_DAYS")) > 0) {
 			returnString = returnString.concat("Warning: You have to wait " + customerInfo.get("PASS_MIN_DAYS") 
 				+ "days to change password, this can be a security risk in case of accidental password change.");
 		}
