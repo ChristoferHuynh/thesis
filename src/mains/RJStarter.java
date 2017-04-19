@@ -10,12 +10,7 @@ import parsers.RJParser;
 import parsers.UnixParser;
 
 public class RJStarter {
-	
-	public static void main(String[] args) {
-		System.out.println("I am a meme");
-	}
 
-	
 	//Initiate Parsers
 	RJParser rjParser = new RJParser();
 	LynisParser lynisParser = new LynisParser();

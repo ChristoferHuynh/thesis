@@ -95,7 +95,7 @@ public class RJParser extends Parser {
 		return returnString;
 	}
 
-	public HashMap<String, String[]> read_crontab_info(File customerFile) { //Unsure how to parse, how does it look when they exist?
+	public HashMap<String, String[]> read_crontab_info(File customerFile) { 
 		HashMap<String, String[]> values = new HashMap<String, String[]>(); 
 		int line = 1;
 		String notSetupString = "No crontab has been set up for the following: \n";
@@ -121,7 +121,7 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_crontab_info(HashMap<String, String[]> customerInfo) {
-		// Already implemented in read method oops
+		//Make sure that users cannot use cronjobs that allows them to access previously unaccessable files
 		return "";
 	}
 
@@ -157,6 +157,8 @@ public class RJParser extends Parser {
 
 	public String evaluate_diskvolume_info(HashMap<String, String[]> customerInfo) {
 		String returnString = "Current mounted discs(?): \n";
+		//Find unusual mount location or filetypes?
+		//Make sure the disc spaces are big enough to not lose tmp info
 
 		Iterator itr = customerInfo.keySet().iterator();
 
@@ -200,7 +202,8 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_encrypted_disk_info(HashMap<String, HashMap<String, String>> customerInfo) {
-
+		//Find non-unique UUIDS?
+		
 		Set<String> keys = customerInfo.keySet();
 		Iterator keysItr = keys.iterator();
 
@@ -245,6 +248,8 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_environment_info(HashMap<String, String> customerInfo) {
+		//compare values with acceptable value set
+		
 		String returnString = "";
 		Iterator itr = customerInfo.keySet().iterator();
 
@@ -296,6 +301,7 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_firewall_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
+		//Make sure not all traffic is accepted by default
 		int policy = 000;
 		String returnString = "";
 		if (customerInfo.get("INPUT")[0].equals("ACCEPT"))	policy += 1;
@@ -339,6 +345,8 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_groups_info(HashMap<String, String[]> customerInfo) {
+		//Check for users in "critical" groups such as root, sudo, adm
+		
 		String returnString = "";
 
 		try {
@@ -364,7 +372,7 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_lastlog_info(HashMap<String, String[]> customerInfo) {
-		//IDK
+		//Check if certain users have logged in? 
 		return null;
 	}
 
@@ -396,7 +404,7 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_modprobe_info(HashMap<String, String[]> customerInfo) {
-		//IDK
+		//Make sure there are blacklists? 
 		return null;
 	}
 
@@ -431,6 +439,7 @@ public class RJParser extends Parser {
 
 	public String evaluate_networkvolume_info(HashMap<String, String[]> customerInfo) {
 		//IDK
+		//Find non unique UIDs
 		return null;
 	}
 
@@ -518,8 +527,14 @@ public class RJParser extends Parser {
 	}
 
 	public String evaluate_passwdpolicy_info(HashMap<String, String> customerInfo) {
+		//Compare values with acceptable values
 		String returnString = "";
-		//IDK 
+
+		
+		if (Integer.parseInt(customerInfo.get("PASS_MIN_DAYS")) == 0) {
+			returnString = returnString.concat("Warning: You have to wait " + customerInfo.get("PASS_MIN_DAYS") 
+				+ "days to change password, this can be a security risk in case of accidental password change.");
+		}
 		for (String key : customerInfo.keySet()) {
 			System.out.println("\nkey: " + key + " :: " + customerInfo.get(key));
 		}
@@ -549,18 +564,13 @@ public class RJParser extends Parser {
 	}
 	
 
-	public String evaluate_processes_info(HashMap<String, String[]> customerInfo) { //Typ klar? Kanske kolla om specifika IP addresser �r blockade?
-
+	public String evaluate_processes_info(HashMap<String, String[]> customerInfo) { 
 		String returnString = "";
 
 		for (String name: customerInfo.keySet()){
 
 			String key = name.toString();
-			System.out.print("\n");
 			String[] value = customerInfo.get(name);
-			for (int i = 0; i < value.length; i++){
-				System.out.print(" " + value[i]);  
-			}
 		}
 
 		return returnString;

@@ -54,6 +54,18 @@ public class RealStarter {
 			}
 		}
 		
+		// Lynis
+		
+		lynisParser = new LynisParser();
+		
+		lynisFile = new File("/tmp/lynis.log");
+		
+		finalString = finalString.concat("\n\n\n #### Lynis \n\n\n");
+				
+		finalString = finalString.concat(lynisParser.evaluate(lynisParser.read(lynisFile)));
+		
+		// unix-privesc
+		
 		PrintWriter out;
 
 		try {

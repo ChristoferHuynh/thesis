@@ -68,7 +68,7 @@ public class LynisParser {
 		
 	}
 	
-	public String print(HashMap<String, String[]> map) {
+	public String evaluate(HashMap<String, String[]> map) {
 		String returnString = "";
 		
 		for (String key : map.keySet()) {
